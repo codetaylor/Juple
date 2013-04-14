@@ -14,9 +14,9 @@ The initial idea for Juple spawned during development of the PC game, [Lodestar:
 This repository contains several classes of interest:
 * **Juple** serializes and deserializes Java objects to and from TML.
 * **JupleBuilder** builds a Juple instance with user defined settings.
-* **TMLNodeTreeParser** parses TML into a pattern searchable node tree consistent with the TML spec.
-* **TMLReader** is a wrapper for a java.io.Reader with methods to assert syntax and read data.
-* **TMLWriter** is a wrapper for a java.io.Writer with methods to assert syntax and write data.
+* **TMLNodeTreeParser** parses TML into a pattern searchable node tree.
+* **TMLReader** is a wrapper for java.io.Reader with methods to assert syntax and read data.
+* **TMLWriter** is a wrapper for java.io.Writer with methods to assert syntax and write data.
 
 ## Example
 
