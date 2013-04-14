@@ -54,8 +54,8 @@ It is very simple to create a Java object from its TML representation using Jupl
 
 #####Java
 
-    TMLClassParser parser = new TMLClassParser();
-    Monster grue = parser.fromTML(reader, Monster.class);
+    Juple juple = new Juple();
+    Monster monster = juple.fromTML(reader, Monster.class);
 
 For more examples, check out the examples folder.
 
