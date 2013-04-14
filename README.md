@@ -11,52 +11,52 @@ Juple was created to combine the simplicity and elegance of John Judnich's Tuple
 The initial idea for Juple spawned during development of the PC game, [Lodestar: Stygian Skies](https://lodestargame.com/home). After trying out JSON for defining game entities it was clear that we wanted something simpler than JSON to represent the entity data in text. We wanted something simple and elegant, something that modders could easily edit without worrying about syntax. We also wanted something versatile and powerful on the other end, something we could use to easily load data into arbitrary Java classes. TML was recommended as an alternative to JSON and Juple was born.
 
 ### What is in this repository?
-
-* *Juple* parses TML data into a Java object.
-* *JupleBuilder* builds a Juple instance with user defined settings.
-* *TMLNodeTreeParser* is used to parse TML into a pattern searchable node tree consistent with the original TML spec.
-* *TMLReader* is a wrapper for a java.io.Reader that contains methods to assert syntax and read data.
-* *TMLWriter* is a wrapper for a java.io.Writer that contains methods to assert syntax and write data.
+This repository contains several classes of interest:
+* **Juple** serializes and deserializes Java objects to and from TML.
+* **JupleBuilder** builds a Juple instance with user defined settings.
+* **TMLNodeTreeParser** parses TML into a pattern searchable node tree consistent with the TML spec.
+* **TMLReader** is a wrapper for a java.io.Reader with methods to assert syntax and read data.
+* **TMLWriter** is a wrapper for a java.io.Writer with methods to assert syntax and write data.
 
 ## Example
 
 It is very simple to create a Java object from its TML representation using Juple.
 
-#####TML
-
-    [
-        [ name | Ethereal Filcher ]
-        [ life | 22 ]
-        [ location |
-            [ x | 6.2 ]
-            [ y | 5.4 ]
-            [ z | -3.14 ]
-        ]
-        [ ethereal | true ]
+######TML
+```java
+[
+    [ name | Ethereal Filcher ]
+    [ life | 22 ]
+    [ location |
+        [ x | 6.2 ]
+        [ y | 5.4 ]
+        [ z | -3.14 ]
     ]
-
-#####Java Objects
-
-    public class Vector3f {
-        public float x, y, z;
-        
-        public Vector3f() {}
-    }
+    [ ethereal | true ]
+]
+```
+######Java Objects
+```java
+public class Vector3f {
+    public float x, y, z;
     
-    public class Monster {
-        private String name;
-        private int life;
-        private Vector3f location;
-        private boolean ethereal;
-        
-        public Monster() {}
-    }
+    public Vector3f() {}
+}
 
-#####Java
-
-    Juple juple = new Juple();
-    Monster monster = juple.fromTML(reader, Monster.class);
-
+public class Monster {
+    private String name;
+    private int life;
+    private Vector3f location;
+    private boolean ethereal;
+    
+    public Monster() {}
+}
+```
+######Java
+```java
+Juple juple = new Juple();
+Monster monster = juple.fromTML(reader, Monster.class);
+```
 For more examples, check out the examples folder.
 
 ##Liscense
