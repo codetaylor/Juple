@@ -14,6 +14,10 @@ Juple is a Java library that can be used to convert Java objects to and from a T
 		- [Collections Limitations](#collections-limitations)
 	- [Serializing and Deserializing Generic Types](#serializing-and-deserializing-generic-types)
 	- [Serializing and Deserializing Collection with Objects of Arbitrary Types](#serializing-and-deserializing-collection-with-objects-of-arbitrary-types)
+    - [Custom Type Adapters](#custom-type-adapters)
+        - [Writing a Type Adapter](#writing-a-type-adapter)
+        - [Controlling Encapsulation Behavior](#controlling-encapsulation-behavior)
+        - [Registering a Single Type Adapter for Multiple Generic Types](#registering-a-single-type-adapter-for-multiple-generic-types)
 - [License](#license)
 
 ##Disclaimer
@@ -36,7 +40,7 @@ The main class to use is Juple which can be created by simply calling ```new Jup
 The Juple instance does not maintain any state while invoking TML operations, so you are free to reuse the same object for multiple serialization and deserialization operations, even across multiple threads.
 
 ###Primitive Examples
-######Serialization
+####Serialization
 ```java
 Juple juple = new Juple();
 juple.toTML(1);            //prints [1]
@@ -47,7 +51,7 @@ juple.toTML(values);       //prints [1 2 3]
 String[] strValues = { "Hello world!", "...again." };
 juple.toTML(strValues);    //prints [[Hello world!][...again]]
 ```
-######Deserialization
+####Deserialization
 ```java
 int one = juple.fromTML("[1]", int.class);
 Integer one = juple.fromTML("[1]", Integer.class);
@@ -56,7 +60,7 @@ Boolean false = juple.fromTML("[false]", Boolean.class);
 String str = juple.fromTML("[abc]", String.class);
 ```
 ###Object Examples
-######Object
+####Object
 ```java
 class BagOfPrimitives {
     private int value1 = 1;
@@ -67,7 +71,7 @@ class BagOfPrimitives {
     }
 }
 ```
-######Serialization
+####Serialization
 ```java
 BagOfPrimitives obj = new BagOfPrimitives();
 Juple juple = new Juple();
@@ -76,13 +80,13 @@ String tml = juple.toTML(obj);
 ```
 **NOTE:** Serializing objects with a circular reference will result in infinite recursion and produce an exception.
 
-######Deserialization
+####Deserialization
 ```java
 BagOfPrimitives obj2 = juple.fromTML(tml, BagOfPrimitives.class);
 // obj2 is just like obj1
 ```
 
-######Notes on Objects
+####Notes on Objects
 * It is perfectly fine (and recommended) to use private fields
 * There is no need to use any annotations to indicate a field is to be included for serialization and deserialization. All fields in the current class, and from all super classes, are included by default.
 * If a field is marked transient, by default it is ignored and not included in the TML serialization or deserialization.
@@ -132,12 +136,12 @@ Juple juple = new Juple();
 int[] ints = {1, 2, 3, 4, 5};
 String[] strings = {"abc", "def", "ghi"};
 ```
-######Serialization
+####Serialization
 ```java
 juple.toTML(ints);    // prints [1 2 3 4 5]
 juple.toTML(strings); // prints [[abc][def][ghi]]
 ```
-######Deserialization
+####Deserialization
 ```java
 int[] ints2 = juple.fromTML([1 2 3 4 5], int[].class);
 // ints2 will be the same as ints
@@ -149,11 +153,11 @@ Juple also supports multi-dimensional arrays with arbitrarily complex element ty
 Juple juple = new Juple();
 Collection<Integer> ints = Lists.immutableList(1,2,3,4,5);
 ```
-######Serialization
+####Serialization
 ```java
 String tml = juple.toTML(ints); // prints [1 2 3 4 5]
 ```
-######Deserialization
+####Deserialization
 ```java
 Type collectionType = new TMLTypeToken<Collection<Integer>>(){}.getType();
 Collection<Integer> ints2 = juple.fromTML(tml, collectionType);
@@ -161,7 +165,7 @@ Collection<Integer> ints2 = juple.fromTML(tml, collectionType);
 ```
 **NOTE:** Take note of how the collection type is defined through the use of the TMLTypeToken class.
 
-######Collections Limitations
+####Collections Limitations
 * Juple can serialize a collection of arbitrary objects, but cannot deserialize from it because there is no way for the user to indicate the type of the resulting object.
 * When deserializing, `Collection` must be of a specific generic type.
 
@@ -222,6 +226,129 @@ However, deserialization with `fromTML(tml, Collection.class)` will not work sin
 2. Register a type adapter for Collection.class that looks at each of the array members and maps them to appropriate objects. The disadvantage of this approach is that it will screw up deserialization of other collection types in Juple.
 3. Register a type adapter for `MyCollectionMemberType` and use `fromTML()` with `Collection<MyCollectionMemberType>`.
 This approach is only practical if the array appears as a top-level element or if you can change the field type holding the collection to be of type `Collection<MyCollectionMemberType>`.
+
+###Custom Type Adapters
+Sometimes default representation is not what you want. Juple allows you to register your own type adapters:
+```java
+JupleBuilder builder = new JupleBuilder();
+builder.registerTypeAdapter(MyType.class, new MyTypeAdapter());
+```
+####Writing a Type Adapter
+Let's use a typical three point vector as an example class:
+```java
+public class Vector3f {
+    public float x, y, z;
+
+    @SuppressWarnings("unused")
+    private Vector3f() {}
+    
+    public Vector3f(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+```
+The default output of this object in TML looks like this:
+```
+[
+    [x | 1.2]
+    [y | 3.14]
+    [z | 42.0001]
+]
+```
+This is rather excessive, however, because we know that a `Vector3f` object will always contain just three floats. Here is an example of how to write a custom type adapter for the `Vector3f` class:
+```java
+public static class Vector3fAdapter extends TMLTypeAdapter<Vector3f> {
+    @Override
+    public Vector3f read(TMLReader in) throws IOException {
+        if (in.peek() == TMLToken.NULL) {
+            in.nextNull();
+            return null;
+        }
+        try {
+            Vector3f v = new Vector3f();
+            v.x = Float.parseFloat(in.nextString());
+            v.y = Float.parseFloat(in.nextString());
+            v.z = Float.parseFloat(in.nextString());
+            return v;
+        } catch (NumberFormatException e) {
+            throw new TMLSyntaxException(e);
+        }
+    }
+
+    @Override
+    public void write(TMLWriter out, Vector3f value) throws IOException {
+        if (value == null) {
+            out.nullValue();
+            return;
+        }
+        out.value(value.x);
+        out.value(value.y);
+        out.value(value.z);
+    }
+}
+```
+The `Vector3f` class will now serialize to and deserialize from TML that looks like this:
+```
+[1.2 3.14 42.0001]
+```
+Arrays or collections of `Vector3f` objects will now look like this:
+```
+[1.2 3.14 42.0001 1.2 3.14 42.0001 1.2 3.14 42.0001 1.2 3.14 42.0001 1.2 3.14 42.0001]
+```
+####Controlling Encapsulation Behavior
+The `TMLTypeAdapter` class has three methods that can be overridden to better control open and close delimiter encapsulation behavior:
+
+**isRootEncapsulate()** - default `true`
+```java
+public boolean isRootEncapsulate() {
+    return true;
+}
+```
+If this method returns `true`, Juple will force encapsulation at the root level. If it returns `false`, encapsulation at the root level will not be enforced and will be left up to the type adapter. For example, the custom `Vector3f` type adapter above defaults to `true`, producing `[1.2 3.14 42.0001]`. If we override `isRootEncapsulate()` to return `false`, the TML would look like this `1.2 3.14 42.0001` and fail because the type adapter does not perform any encapsulation.
+
+**isFieldEncapsulate()** - default `false`
+```java
+public boolean isFieldEncapsulate() {
+    return false;
+}
+```
+If this method returns `true`, Juple will force encapsulation when the object is the value of a class field:
+```
+[
+    [field | [1.2 3.14 42.0001]]
+]
+```
+If it instead returns its default value of `false`:
+```
+[
+    [field | 1.2 3.14 42.0001]
+]
+```
+**isArrayEncapsulate()** - default `false`
+```java
+public boolean isArrayEncapsulate() {
+    return false;
+}
+```
+Sometimes you might want to encapsulate values inside an array or collection. If `isArrayEncapsulate()` returns `true` and the type adapter's type appears in an array or collection, Juple will force encapsulation. For example, the string type adapter overrides and returns true to produce serialized array or collection of strings that looks like:
+```
+[
+    [Hello world!]
+    [This is a string.]
+]
+```
+If the string type adapter did not override this behavior, the array or collection of strings would look like:
+```
+[Hello world! This is a string]
+```
+... and Juple would not know where the strings were separated.
+
+####Registering a Single Type Adapter for Multiple Generic Types
+Often you want to register a single handler for all generic types corresponding to a raw type. For example, suppose you have an `Id` class for Id representation/translation (i.e. an internal vs. external representation). The `Id<T>` type would have the same serialization for all generic types so the type adapter would just write the value in its `write()` method. Deserialization in the adapter's `read()` method would be a little different. You would need to call `new Id(Class<T>, String)` which needs to return an instance of `Id<T>`.
+
+Juple supports registering a single handler for this. You can also register a specific handler for a specific generic type (say `Id<RequiresSpecialHandling>` needed special handling). The `Type` parameter for `toTML()` and `fromTML()` contains the generic type information to help you write a single handler for all generic types corresponding to the same raw type.
 
 ##Liscense
 
