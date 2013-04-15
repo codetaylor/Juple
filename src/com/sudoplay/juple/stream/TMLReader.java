@@ -240,7 +240,6 @@ public class TMLReader implements Closeable {
   /**
    * Consumes and returns the next string.
    * 
-   * @param groupStrings
    * @return
    * @throws IOException
    */
