@@ -17,7 +17,7 @@ Documentation:
 * **SYNTAX.md** highlights how Juple interprets TML  ([link](https://github.com/codetaylor/Juple/blob/master/SYNTAX.md))
 * **LICENSE** the license  ([link](https://github.com/codetaylor/Juple/blob/master/LICENSE))
 
-The `com.sudoplay.juple package` contains several classes of interest:
+The `com.sudoplay.juple` package contains several classes of interest:
 * **Juple** serializes and deserializes Java objects to and from TML.
 * **JupleBuilder** builds a Juple instance with user defined settings.
 * **TMLNodeTreeParser** parses TML into a pattern searchable node tree.
