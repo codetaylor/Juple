@@ -122,7 +122,7 @@ public class Juple {
   private final TMLNodeTreeParser nodeTreeParser = new TMLNodeTreeParser(true);
 
   /**
-   * Constructs a new TMLClassParser with default settings.
+   * Constructs a new Juple instance with default settings.
    */
   public Juple() {
     this(TMLExcluder.DEFAULT, Collections
@@ -131,7 +131,7 @@ public class Juple {
   }
 
   /**
-   * Constructs a new TMLClassParser and registers the default
+   * Constructs a new Juple instance and registers the default
    * {@link TMLTypeAdapterFactory}s and user supplied factories.
    * 
    * @param overrideSpaceEscapePolicy
@@ -227,6 +227,30 @@ public class Juple {
     return TMLPrimitives.wrap(classOfT).cast(object);
   }
 
+  /**
+   * This method deserializes the specified TML into an object of the specified
+   * type. This method is useful if the specified object is a generic type. For
+   * non-generic objects, use {@link #fromTML(String, Class)} instead. If you
+   * have the TML in a {@link Reader} instead of a String, use
+   * {@link #fromTML(Reader, Type)} instead.
+   * 
+   * <p>
+   * You can obtain the type by using the
+   * {@link com.sudoplay.juple.classparser.TMLTypeToken} class. For example, to
+   * get the type for {@code Collection<Foo>}, you should use:
+   * 
+   * <pre>
+   * Type typeOfObj = new TMLTypeToken&lt;Collection&lt;Foo&gt;&gt;() {}.getType();
+   * </pre>
+   * 
+   * @param <T>
+   *          the type of the desired object
+   * @param string
+   *          the string from which the object is to be deserialized
+   * @param typeOfT
+   *          The specific genericized type of src
+   * @return an object of type T from the string
+   */
   @SuppressWarnings("unchecked")
   public <T> T fromTML(String string, Type type) {
     if (string == null) return null;
@@ -236,11 +260,58 @@ public class Juple {
     return object;
   }
 
+  /**
+   * This method deserializes the TML read from the specified reader into an
+   * object of the specified class. It is not suitable to use if the specified
+   * class is a generic type since it will not have the generic type information
+   * because of the Type Erasure feature of Java. Therefore, this method should
+   * not be used if the desired type is a generic type. Note that this method
+   * works fine if the any of the fields of the specified object are generics,
+   * just the object itself should not be a generic type. For the cases when the
+   * object is of generic type, invoke {@link #fromTML(Reader, Type)}. If you
+   * have the TML in a String form instead of a {@link Reader}, use
+   * {@link #fromTML(String, Class)} instead.
+   * 
+   * @param <T>
+   *          the type of the desired object
+   * @param reader
+   *          the reader producing the TML from which the object is to be
+   *          deserialized
+   * @param classOfT
+   *          the class of T
+   * @return an object of type T from the string
+   */
   public <T> T fromTML(Reader reader, Class<T> classOfT) {
     Object object = fromTML(reader, (Type) classOfT);
     return TMLPrimitives.wrap(classOfT).cast(object);
   }
 
+  /**
+   * This method deserializes the TML read from the specified reader into an
+   * object of the specified type. This method is useful if the specified object
+   * is a generic type. For non-generic objects, use
+   * {@link #fromTML(Reader, Class)} instead. If you have the Json in a String
+   * form instead of a {@link Reader}, use {@link #fromTML(String, Type)}
+   * instead.
+   * 
+   * <p>
+   * You can obtain the type by using the
+   * {@link com.sudoplay.juple.classparser.TMLTypeToken} class. For example, to
+   * get the type for {@code Collection<Foo>}, you should use:
+   * 
+   * <pre>
+   * Type typeOfObj = new TMLTypeToken&lt;Collection&lt;Foo&gt;&gt;() {}.getType();
+   * </pre>
+   * 
+   * @param <T>
+   *          the type of the desired object
+   * @param reader
+   *          the reader producing TML from which the object is to be
+   *          deserialized
+   * @param typeOfT
+   *          The specific genericized type of src
+   * @return an object of type T from the tml
+   */
   @SuppressWarnings("unchecked")
   public <T> T fromTML(Reader reader, Type type) throws TMLSyntaxException,
       TMLIOException {
