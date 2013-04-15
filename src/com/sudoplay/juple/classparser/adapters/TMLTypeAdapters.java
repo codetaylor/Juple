@@ -444,7 +444,7 @@ public class TMLTypeAdapters {
       BitSet.class, BIT_SET);
 
   // ==========================================================================
-  // = Class
+  // = Calendar
   // ==========================================================================
 
   public static final TMLTypeAdapter<Calendar> CALENDAR = new TMLTypeAdapter<Calendar>() {
