@@ -304,17 +304,6 @@ public final class JupleBuilder {
   }
 
   /**
-   * Registers a {@link TMLTypeAdapterFactory} by simply calling
-   * {@link #registerTypeAdapterFactory(TMLTypeAdapterFactory)}.
-   * 
-   * @param typeAdapterFactory
-   * @return a reference to this {@code JupleBuilder} object for chaining
-   */
-  public JupleBuilder register(TMLTypeAdapterFactory factory) {
-    return registerTypeAdapterFactory((TMLTypeAdapterFactory) factory);
-  }
-
-  /**
    * Add a user defined {@link TMLTypeAdapterFactory} to the list. If the
    * factory is null or already exists in the list, an exception is thrown.
    * 

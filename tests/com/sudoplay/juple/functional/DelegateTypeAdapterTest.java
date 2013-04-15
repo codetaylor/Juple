@@ -68,7 +68,7 @@ public class DelegateTypeAdapterTest {
 
   public DelegateTypeAdapterTest() {
     stats = new StatsTypeAdapterFactory();
-    juple = new JupleBuilder().register(stats).create();
+    juple = new JupleBuilder().registerTypeAdapterFactory(stats).create();
   }
 
   @Test
