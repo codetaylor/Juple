@@ -11,7 +11,13 @@ Juple was created to combine the simplicity and elegance of John Judnich's Tuple
 The initial idea for Juple spawned during development of the PC game, [Lodestar: Stygian Skies](https://lodestargame.com/home). After trying out JSON for defining game entities it was clear that we wanted something simpler than JSON to represent the entity data in text. We wanted something simple and elegant, something that modders could easily edit without worrying about syntax. We also wanted something versatile and powerful on the other end, something we could use to easily load data into arbitrary Java classes. TML was recommended as an alternative to JSON and Juple was born.
 
 ### What is in this repository?
-This repository contains several classes of interest:
+Documentation:
+* **README.md** this file
+* **USER_GUIDE.md** illustrates how to use Juple ([link](https://github.com/codetaylor/Juple/blob/master/USER_GUIDE.md))
+* **SYNTAX.md** highlights how Juple interprets TML  ([link](https://github.com/codetaylor/Juple/blob/master/SYNTAX.md))
+* **LICENSE** the license  ([link](https://github.com/codetaylor/Juple/blob/master/LICENSE))
+
+The `com.sudoplay.juple package` contains several classes of interest:
 * **Juple** serializes and deserializes Java objects to and from TML.
 * **JupleBuilder** builds a Juple instance with user defined settings.
 * **TMLNodeTreeParser** parses TML into a pattern searchable node tree.
