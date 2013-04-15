@@ -299,7 +299,7 @@ public class TMLWriter implements Closeable, Flushable {
     assertNotClosed();
     assertScopeGreaterThanZero();
     if (enforceFiniteFloatingPointValues) {
-      if (Double.isNaN(value) || Double.isInfinite(value)) {
+      if (Float.isNaN(value) || Float.isInfinite(value)) {
         throw new IllegalArgumentException(
             "Numeric values must be finite, but was " + value);
       }
