@@ -1,6 +1,21 @@
 #Juple User Guide
 Juple is a Java library that can be used to convert Java objects to and from a Tuple Markup Language (TML) representation.
 
+##Contents
+- [Disclaimer](#disclaimer)
+- [Goals for Juple](#goals-for-juple)
+- [Using Juple](#using-juple)
+    - [Primitive Examples](#primitive-examples)
+	- [Object Examples](#object-examples)
+		- [Notes on Objects](#notes-on-objects)
+	- [Nested Classes (including Inner Classes)](#nested-classes-including-inner-classes)
+	- [Array Examples](#array-examples)
+	- [Collections Examples](#collections-examples)
+		- [Collections Limitations](#collections-limitations)
+	- [Serializing and Deserializing Generic Types](#serializing-and-deserializing-generic-types)
+	- [Serializing and Deserializing Collection with Objects of Arbitrary Types](#serializing-and-deserializing-collection-with-objects-of-arbitrary-types)
+- [License](#license)
+
 ##Disclaimer
 Juple uses code adapted from [Google's Gson](https://code.google.com/p/google-gson/) and the content in this guide was derived from the [Gson User Guide](https://sites.google.com/site/gson/gson-user-guide). The [Tuple Markup Language](https://github.com/judnich/TupleMarkup) specification was originally written by John Judnich. Juple is in no way endorsed by Google, the authors of Gson and the Gson User Guide, or John Judnich.
 
@@ -207,3 +222,7 @@ However, deserialization with `fromTML(tml, Collection.class)` will not work sin
 2. Register a type adapter for Collection.class that looks at each of the array members and maps them to appropriate objects. The disadvantage of this approach is that it will screw up deserialization of other collection types in Juple.
 3. Register a type adapter for `MyCollectionMemberType` and use `fromTML()` with `Collection<MyCollectionMemberType>`.
 This approach is only practical if the array appears as a top-level element or if you can change the field type holding the collection to be of type `Collection<MyCollectionMemberType>`.
+
+##Liscense
+
+Copyright (C) 2013 Jason Taylor. Released as open-source under [Apache Liscense, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
