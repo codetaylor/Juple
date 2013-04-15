@@ -77,7 +77,6 @@ public class CustomTypeAdapterExample {
   public static class Vector3f {
     public float x, y, z;
 
-    @SuppressWarnings("unused")
     private Vector3f() {}
 
     public Vector3f(float x, float y, float z) {
