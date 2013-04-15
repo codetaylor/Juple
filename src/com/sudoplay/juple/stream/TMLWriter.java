@@ -291,6 +291,29 @@ public class TMLWriter implements Closeable, Flushable {
   /**
    * Encodes {@code value}.
    * 
+   * @param value
+   *          a finite value
+   * @return this writer
+   */
+  public TMLWriter value(float value) throws IOException {
+    assertNotClosed();
+    assertScopeGreaterThanZero();
+    if (enforceFiniteFloatingPointValues) {
+      if (Double.isNaN(value) || Double.isInfinite(value)) {
+        throw new IllegalArgumentException(
+            "Numeric values must be finite, but was " + value);
+      }
+    }
+    writeDeferredName();
+    beforeValue(false);
+    out.write(Float.toString(value));
+    lastToken = TMLToken.DATA;
+    return this;
+  }
+
+  /**
+   * Encodes {@code value}.
+   * 
    * @return this writer
    */
   public TMLWriter value(long value) throws IOException {
