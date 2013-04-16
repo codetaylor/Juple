@@ -375,7 +375,7 @@ Sometimes that the type that you are trying to instantiate is a parameterized ty
 class MyList<T> extends ArrayList<T> {
 }
 
-class MyListInstanceCreator implements InstanceCreator<MyList<?>> {
+class MyListInstanceCreator implements TMLInstanceCreator<MyList<?>> {
     @SuppressWarnings("unchecked")
     public MyList<?> createInstance(Type type) {
         // No need to use a parameterized list since the actual instance will have the raw type anyway.
@@ -394,7 +394,7 @@ public class Id<T> {
     }
 }
 
-class IdInstanceCreator implements InstanceCreator<Id<?>> {
+class IdInstanceCreator implements TMLInstanceCreator<Id<?>> {
     public Id<?> createInstance(Type type) {
         Type[] typeParameters = ((ParameterizedType)type).getActualTypeArguments();
         Type idType = typeParameters[0]; // Id has only one parameterized type T
