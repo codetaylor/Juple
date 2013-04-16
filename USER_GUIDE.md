@@ -18,6 +18,9 @@ Juple is a Java library that can be used to convert Java objects to and from a T
         - [Writing a Type Adapter](#writing-a-type-adapter)
         - [Controlling Encapsulation Behavior](#controlling-encapsulation-behavior)
         - [Registering a Single Type Adapter for Multiple Generic Types](#registering-a-single-type-adapter-for-multiple-generic-types)
+	- [Writing an Instance Creator](#writing-an-instance-creator)
+		- [Instance Creator Example](#instance-creator-example)
+		- [Instance Creator for a Parameterized Type](#instance-creator-for-a-parameterized-type)
 - [License](#license)
 
 ##Disclaimer
