@@ -350,6 +350,57 @@ Often you want to register a single handler for all generic types corresponding 
 
 Juple supports registering a single handler for this. You can also register a specific handler for a specific generic type (say `Id<RequiresSpecialHandling>` needed special handling). The `Type` parameter for `toTML()` and `fromTML()` contains the generic type information to help you write a single handler for all generic types corresponding to the same raw type.
 
+###Writing an Instance Creator
+While deserializing an object, Juple needs to create a default instance of the class. Well-behaved classes that are meant for serialization and deserialization should have either a **public or private** no-argument constructor.
+
+Typically, instance creators are needed when you are dealing with a library class that **does not** define a no-argument constructor.
+
+**NOTE:** A custom instance creator is not needed if a custom type adapter is registered for the type, as instance creation will typically be handled in the `read()` method of the adapter.
+
+####Instance Creator Example
+```java
+private class MoneyInstanceCreator implements TMLInstanceCreator<Money> {
+    public Money createInstance(Type type) {
+        return new Money("1000000", CurrencyCode.USD);
+    }
+}
+```
+Type could be of a corresponding generic type. This is useful to invoke constructors which need specific generic type information, for example, if the `Id` class stores the class for which the `Id` is being created.
+###Instance Creator for a Parameterized Type
+Sometimes that the type that you are trying to instantiate is a parameterized type. Generally, this is not a problem since the actual instance is of raw type. Here is an example:
+```java
+class MyList<T> extends ArrayList<T> {
+}
+
+class MyListInstanceCreator implements InstanceCreator<MyList<?>> {
+    @SuppressWarnings("unchecked")
+    public MyList<?> createInstance(Type type) {
+        // No need to use a parameterized list since the actual instance will have the raw type anyway.
+        return new MyList();
+    }
+}
+```
+However, sometimes you do need to create an instance based on the actual parameterized type. In this case, you can use the type parameter being passed to the `createInstance` method. Here is an example:
+```java
+public class Id<T> {
+    private final Class<T> classOfId;
+    private final long value;
+    public Id(Class<T> classOfId, long value) {
+        this.classOfId = classOfId;
+        this.value = value;
+    }
+}
+
+class IdInstanceCreator implements InstanceCreator<Id<?>> {
+    public Id<?> createInstance(Type type) {
+        Type[] typeParameters = ((ParameterizedType)type).getActualTypeArguments();
+        Type idType = typeParameters[0]; // Id has only one parameterized type T
+        return Id.get((Class)idType, 0L);
+    }
+}
+```
+In the above example, an instance of the `Id` class cannot be created without actually passing in the actual type for the parameterized type. We solve this problem by using the passed method parameter, `type`. The `type` object in this case is the Java parameterized type representation of `Id<Foo>` where the actual instance should be bound to `Id<foo>`. Since the `Id` class has just one parameterized type parameter, `T`, we use the zero element of the type array returned by `getActualTypeArgument()`, which will hold `Foo.class` in this case.
+
 ##Liscense
 
 Copyright (C) 2013 Jason Taylor. Released as open-source under [Apache Liscense, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
