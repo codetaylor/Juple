@@ -116,6 +116,6 @@ For example: `[[ array | \0 ]]` represents a field with a null value, if the fie
 
 `[[ array | \2 ]]` represents field containing a null array, collection, or map.
 
-##Liscense
+##License
 
-Copyright (C) 2013 Jason Taylor. Released as open-source under [Apache Liscense, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+Copyright (C) 2013 Jason Taylor. Released as open-source under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
