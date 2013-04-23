@@ -65,6 +65,6 @@ Monster monster = juple.fromTML(reader, Monster.class);
 ```
 For more examples, check out the examples folder.
 
-##Liscense
+##License
 
-Copyright (C) 2013 Jason Taylor. Released as open-source under [Apache Liscense, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+Copyright (C) 2013 Jason Taylor. Released as open-source under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
