@@ -21,6 +21,7 @@ Juple is a Java library that can be used to convert Java objects to and from a T
 	- [Writing an Instance Creator](#writing-an-instance-creator)
 		- [Instance Creator Example](#instance-creator-example)
 		- [Instance Creator for a Parameterized Type](#instance-creator-for-a-parameterized-type)
+    - [Compact Vs. Pretty Printing](#compact-vs-pretty-printing)
 - [License](#license)
 
 ##Disclaimer
@@ -404,6 +405,16 @@ class IdInstanceCreator implements TMLInstanceCreator<Id<?>> {
 ```
 In the above example, an instance of the `Id` class cannot be created without actually passing in the actual type for the parameterized type. We solve this problem by using the passed method parameter, `type`. The `type` object in this case is the Java parameterized type representation of `Id<Foo>` where the actual instance should be bound to `Id<foo>`. Since the `Id` class has just one parameterized type parameter, `T`, we use the zero element of the type array returned by `getActualTypeArgument()`, which will hold `Foo.class` in this case.
 
-##Liscense
+###Compact Vs. Pretty Printing
 
-Copyright (C) 2013 Jason Taylor. Released as open-source under [Apache Liscense, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+The default TML output that is provided by Juple is a compact TML format: there will not be any unnecessary whitespace in the output. When the pretty print feature is enabled, Juple will output a more human-readable TML format using line breaks and indents.
+
+To enable the pretty print feature, you must configure your 'Juple' instance using the 'JupleBuilder':
+```java
+Juple juple = new JupleBuilder().setPrettyPrinting().create();
+String output = juple.toTML(someObject);
+```
+
+##License
+
+Copyright (C) 2013 Jason Taylor. Released as open-source under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
