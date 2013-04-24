@@ -107,6 +107,12 @@ public class EnumTest {
   }
 
   @Test
+  public void testClassWithPublicEnumFieldSerialization() throws Exception {
+    ClassWithPublicEnumFields target = new ClassWithPublicEnumFields();
+    assertEquals(target.getExpectedTML(), juple.toTML(target));
+  }
+
+  @Test
   public void testClassWithEnumFieldDeserialization() throws Exception {
     String tml = "[[value1|VALUE1][value2|VALUE2]]";
     ClassWithEnumFields target = juple.fromTML(tml, ClassWithEnumFields.class);
@@ -196,6 +202,19 @@ public class EnumTest {
   private static class ClassWithEnumFields {
     private final MyEnum value1 = MyEnum.VALUE1;
     private final MyEnum value2 = MyEnum.VALUE2;
+
+    public String getExpectedTML() {
+      return "[[value1|" + value1 + "][value2|" + value2 + "]]";
+    }
+  }
+
+  private static class ClassWithPublicEnumFields {
+    public enum ThisEnum {
+      VALUE1, VALUE2
+    }
+    
+    public ThisEnum value1 = ThisEnum.VALUE1;
+    public ThisEnum value2 = ThisEnum.VALUE2;
 
     public String getExpectedTML() {
       return "[[value1|" + value1 + "][value2|" + value2 + "]]";
