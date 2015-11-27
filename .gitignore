@@ -2,3 +2,7 @@ bin
 dist
 .classpath
 .project
+.gradle/
+.idea/
+*.iml
+build/
