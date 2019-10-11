@@ -8,8 +8,6 @@ Juple uses modified code from [Google's Gson](https://code.google.com/p/google-g
 ### Why Juple?
 Juple was created to combine the simplicity and elegance of John Judnich's Tuple Markup Language with the versatility and power of Google's Gson.
 
-The initial idea for Juple spawned during development of the PC game, [Lodestar: Stygian Skies](https://lodestargame.com/home). We wanted something versatile and powerful, something we could use to easily load data into arbitrary Java classes. TML was recommended as an alternative to JSON and Juple was born.
-
 ### What is in this repository?
 Documentation:
 * **README.md** this file
