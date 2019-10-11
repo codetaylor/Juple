@@ -26,7 +26,7 @@ The `com.sudoplay.juple` package contains several classes of interest:
 
 It is very simple to create a Java object from its TML representation using Juple.
 
-######TML
+##### TML
 ```java
 [
     [ name | Ethereal Filcher ]
@@ -39,7 +39,7 @@ It is very simple to create a Java object from its TML representation using Jupl
     [ ethereal | true ]
 ]
 ```
-######Java Objects
+##### Java Objects
 ```java
 public class Vector3f {
     public float x, y, z;
@@ -56,13 +56,13 @@ public class Monster {
     public Monster() {}
 }
 ```
-######Java
+##### Java
 ```java
 Juple juple = new Juple();
 Monster monster = juple.fromTML(reader, Monster.class);
 ```
 For more examples, check out the examples folder.
 
-##License
+## License
 
-Copyright (C) 2013 Jason Taylor. Released as open-source under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+Copyright © 2013 Jason Taylor. Released as open-source under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
